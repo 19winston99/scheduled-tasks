@@ -5,34 +5,32 @@
 # 4. Update birthdays.csv to contain today's month and day.
 # See the solution video in the 100 Days of Python Course for explainations.
 
-
-from datetime import datetime
-import pandas
-import random
+# import os and use it to get the Github repository secrets
 import smtplib
+import datetime as dt
+import random
 import os
 
-# import os and use it to get the Github repository secrets
-MY_EMAIL = os.environ.get("MY_EMAIL")
-MY_PASSWORD = os.environ.get("MY_PASSWORD")
+quotes = []
+EMAIL = "hasaroberto99@gmail.com" | os.environ.get("MY_EMAIL")
+PASSWORD = "hzqsyhckgmmhdlrv" | os.environ.get("PWD")
+EMAIL_RECIP = "schiesaro.giada@gmail.com" | os.environ.get("EMAIL_RECIP")
 
-today = datetime.now()
-today_tuple = (today.month, today.day)
+with open("quotes.txt") as file:
+    quotes = file.readlines()
 
-data = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"])                  : data_row for (index, data_row) in data.iterrows()}
-if today_tuple in birthdays_dict:
-    birthday_person = birthdays_dict[today_tuple]
-    file_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(file_path) as letter_file:
-        contents = letter_file.read()
-        contents = contents.replace("[NAME]", birthday_person["name"])
+msg_body = f"Subject:Lucky Charm\n\n{random.choice(quotes)}"
 
-    with smtplib.SMTP("YOUR EMAIL PROVIDER SMTP SERVER ADDRESS") as connection:
-        connection.starttls()
-        connection.login(MY_EMAIL, MY_PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=birthday_person["email"],
-            msg=f"Subject:Happy Birthday!\n\n{contents}"
-        )
+today = dt.datetime.now()
+
+if today.weekday() == 0:
+    try:
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=EMAIL, password=PASSWORD)
+            connection.sendmail(
+                from_addr=EMAIL,
+                to_addrs=EMAIL_RECIP,
+                msg=msg_body.encode("utf-8"))
+    except Exception:
+        raise
