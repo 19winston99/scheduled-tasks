@@ -12,9 +12,9 @@ import random
 import os
 
 quotes = []
-EMAIL = "hasaroberto99@gmail.com" | os.environ.get("MY_EMAIL")
-PASSWORD = "hzqsyhckgmmhdlrv" | os.environ.get("PWD")
-EMAIL_RECIP = "schiesaro.giada@gmail.com" | os.environ.get("EMAIL_RECIP")
+EMAIL = os.environ.get("MY_EMAIL")
+PASSWORD = os.environ.get("PWD")
+EMAIL_RECIP = os.environ.get("EMAIL_RECIP")
 
 with open("quotes.txt") as file:
     quotes = file.readlines()
